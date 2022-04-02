@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(NetCoreAppCurrent);$(NetFrameworkMinimum)</TargetFrameworks>
     <EnableDefaultItems>true</EnableDefaultItems>
-    <DefaultItemExcludes>$(DefaultItemExcludes);nonentrypointassembly\*</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);nonentrypointassembly\*;singlefileapp\*</DefaultItemExcludes>
     <!-- Needed for .NET Framework. -->
     <GenerateDependencyFile>true</GenerateDependencyFile>
   </PropertyGroup>
@@ -17,6 +17,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
     <ProjectReference Include="..\src\Microsoft.Extensions.DependencyModel.csproj" SkipUseReferenceAssembly="true" />
     <ProjectReference Include="nonentrypointassembly\nonentrypointassembly.csproj" />
+    <ProjectReference Include="$(LibrariesProjectRoot)System.Text.Json\src\System.Text.Json.csproj" />
   </ItemGroup>
 
 </Project>

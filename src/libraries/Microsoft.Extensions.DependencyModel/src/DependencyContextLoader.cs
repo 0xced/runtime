@@ -51,7 +51,6 @@ namespace Microsoft.Extensions.DependencyModel
             return assembly.GetManifestResourceStream(name);
         }
 
-        [RequiresAssemblyFiles("DependencyContext for an assembly from a application published as single-file is not supported. The method will return null. Make sure the calling code can handle this case.")]
         public DependencyContext? Load(Assembly assembly!!)
         {
             DependencyContext? context = null;
@@ -64,7 +63,19 @@ namespace Microsoft.Extensions.DependencyModel
 
                 if (context == null)
                 {
-                    context = LoadAssemblyContext(assembly, reader);
+#pragma warning disable IL3000 // Avoid accessing Assembly file path when publishing as a single file
+                    bool isSingleFileApplication = string.IsNullOrEmpty(assembly.Location);
+#pragma warning restore IL3000 // Avoid accessing Assembly file path when publishing as a single file
+                    if (isSingleFileApplication)
+                    {
+                        context = LoadSingleFileApplicationContext(reader);
+                    }
+                    else
+                    {
+#pragma warning disable IL3002 // Avoid calling members marked with 'RequiresAssemblyFilesAttribute' when publishing as a single-file
+                        context = LoadAssemblyContext(assembly, reader);
+#pragma warning restore IL3002 // Avoid calling members marked with 'RequiresAssemblyFilesAttribute' when publishing as a single-file
+                    }
                 }
 
                 if (context != null)
@@ -80,6 +91,12 @@ namespace Microsoft.Extensions.DependencyModel
                 }
             }
             return context;
+        }
+
+        private static DependencyContext? LoadSingleFileApplicationContext(IDependencyContextReader reader)
+        {
+            using Stream? depsJsonStream = SingleFileApplication.GetDepsJsonStream();
+            return depsJsonStream is null ? null : reader.Read(depsJsonStream);
         }
 
         private DependencyContext? LoadEntryAssemblyContext(IDependencyContextReader reader)
