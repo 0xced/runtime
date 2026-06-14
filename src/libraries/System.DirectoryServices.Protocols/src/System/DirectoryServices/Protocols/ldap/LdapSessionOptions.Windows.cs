@@ -32,6 +32,13 @@ namespace System.DirectoryServices.Protocols
         }
 
         [UnsupportedOSPlatform("windows")]
+        public bool CanonicalizeHostName
+        {
+            get => throw new PlatformNotSupportedException();
+            set => throw new PlatformNotSupportedException();
+        }
+
+        [UnsupportedOSPlatform("windows")]
         public void StartNewTlsSessionContext() => throw new PlatformNotSupportedException();
 
         public ReferralChasingOptions ReferralChasing

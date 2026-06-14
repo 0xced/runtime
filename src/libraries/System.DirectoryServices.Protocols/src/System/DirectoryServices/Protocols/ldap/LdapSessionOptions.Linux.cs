@@ -80,6 +80,13 @@ namespace System.DirectoryServices.Protocols
             }
         }
 
+        [UnsupportedOSPlatform("windows")]
+        public bool CanonicalizeHostName
+        {
+            get => !GetBoolValueHelper(LdapOption.LDAP_OPT_X_SASL_NOCANON);
+            set => SetBoolValueHelper(LdapOption.LDAP_OPT_X_SASL_NOCANON, !value);
+        }
+
         /// <summary>
         /// Create a new TLS library context.
         /// Calling this is necessary after setting TLS-based options, such as <c>TrustedCertificatesDirectory</c>.
